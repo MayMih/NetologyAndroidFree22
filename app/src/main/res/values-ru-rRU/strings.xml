@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Нетология ГУЙ</string>
+    <string name="action_stop_title">Стоп</string>
+    <string name="action_clear_title">Очистить</string>
+    <string name="request_hint">Извините, я вас не понял</string>
+    <string name="repeat_button_caption">Повторить</string>
+</resources>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">NetologyUI</string>
+    <string name="action_stop_title">Stop</string>
+    <string name="action_clear_title">Clear</string>
+    <string name="request_hint">Sorry, I can\'t understand you</string>
+    <string name="repeat_button_caption">Repeat</string>
+</resources>
