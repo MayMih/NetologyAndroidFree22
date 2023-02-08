@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "org.mmu.myfirstandroidapp"
-        minSdk 22
+        minSdk 24
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -39,5 +39,6 @@ dependencies {
     implementation 'androidx.test.ext:junit-ktx:1.1.5'
     implementation files('libs/WolframAlpha-1.1.jar')
     implementation 'org.apache.httpcomponents:httpcore:4.4.16'
+    implementation 'androidx.core:core-ktx:1.9.0'
     //implementation 'org.apache.httpcomponents:httpclient:4.5.14'
 }

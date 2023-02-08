@@ -5,4 +5,9 @@
     <string name="action_clear_title">Очистить</string>
     <string name="request_hint">Извините, я вас не понял</string>
     <string name="repeat_button_caption">Повторить</string>
+    <string name="tts_is_not_ready_error">Механизм распознавания речи ещё не готов</string>
+    <string name="tts_add_queue_error">Простите, не могу это произнести</string>
+    <string name="tts_stop_error">Не могу остановить фразу</string>
+    <string name="no_speech_to_text_service_error">Не найдены программы распознавания речи</string>
+    <string name="unexpected_speech_to_text_error">Ошибка преобразования текста в речь</string>
 </resources>

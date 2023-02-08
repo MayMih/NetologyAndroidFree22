@@ -4,4 +4,9 @@
     <string name="action_clear_title">Clear</string>
     <string name="request_hint">Sorry, I can\'t understand you</string>
     <string name="repeat_button_caption">Repeat</string>
+    <string name="tts_is_not_ready_error">TTS Engine is not ready, try again later</string>
+    <string name="tts_add_queue_error">Can\'t pronounce this, sorry</string>
+    <string name="tts_stop_error">Can\'t stop phrase pronounce</string>
+    <string name="no_speech_to_text_service_error">No speech-to-text apps found</string>
+    <string name="unexpected_speech_to_text_error">Something went wrong in Text-to-Speech</string>
 </resources>
