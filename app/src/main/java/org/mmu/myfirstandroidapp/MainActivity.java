@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
@@ -52,8 +53,6 @@ import kotlin.random.Random;
 
 public class MainActivity extends AppCompatActivity
 {
-    
-    
     
     //region 'Типы'
     
@@ -165,6 +164,7 @@ public class MainActivity extends AppCompatActivity
     //endregion 'Типы'
     
     
+    
     //region 'Поля и константы'
     
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity
      * @implSpec An AppID must be supplied in all calls to the Wolfram|Alpha API. If you have
      * multiple applications using the Wolfram|Alpha API, each must have its own AppID.
      */
-    private static final String WOLFRAM_API_KEY = "HJJ8TL-E7TKGK6XE8";
+    private static final String WOLFRAM_API_KEY = "YOUR-KEY-HERE";
     public static final String ADAPTER_TITLE = "Title";
     public static final String ADAPTER_CONTENT = "Content";
     private static final List<Map<String, String>> _cardList = new ArrayList<>();
