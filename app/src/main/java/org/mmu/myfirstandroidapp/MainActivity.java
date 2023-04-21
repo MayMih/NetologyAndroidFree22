@@ -1,21 +1,14 @@
 package org.mmu.myfirstandroidapp;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +18,11 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,8 +37,6 @@ import com.wolfram.alpha.WAQueryResult;
 import com.wolfram.alpha.WASubpod;
 import com.wolfram.alpha.visitor.Visitable;
 
-import org.xml.sax.SAXParseException;
-
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,13 +45,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-import kotlin.random.Random;
-
 public class MainActivity extends AppCompatActivity
 {
     
     //region 'Типы'
     
+    @SuppressLint("StaticFieldLeak")
     private class WebDataDownloadTask extends AsyncTask<String, Void, Void>
     {
         private final WAEngine waEngine;
@@ -63,11 +58,13 @@ public class MainActivity extends AppCompatActivity
         private static final String UNKNOWN_WEB_ERROR_MES = "Ошибка загрузки данных по сети:";
         private static final String WOLFRAM_ALFA_ERROR_MES = "Ошибка движка WolframAlfa";
         
+        @SuppressWarnings("deprecation")
         public WebDataDownloadTask(WAEngine engine)
         {
             waEngine = engine;
         }
         
+        @SuppressWarnings("deprecation")
         @Override
         protected void onPreExecute()
         {
@@ -78,6 +75,7 @@ public class MainActivity extends AppCompatActivity
             Log.d(LOG_TAG, "Начало загрузки веб-ресурса...");
         }
         
+        @SuppressWarnings("deprecation")
         @Override
         protected Void doInBackground(String... request)
         {
@@ -138,6 +136,7 @@ public class MainActivity extends AppCompatActivity
             return null;
         }
         
+        @SuppressWarnings("deprecation")
         @Override
         protected void onPostExecute(Void unused)
         {
@@ -168,7 +167,6 @@ public class MainActivity extends AppCompatActivity
     //region 'Поля и константы'
     
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private static final int VOICE_RECOGNITION_REQUEST_CODE = Random.Default.nextInt() + 1;
     /**
      * APP NAME: NetologyQuery
      * <p>
@@ -229,7 +227,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 final var res = result.getData().getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0);
                 txtQuery.setText(res);
-                askWolframAsync(res);
+                this.askWolframAsync(res);
             }
         );
         Log.w(LOG_TAG, "end of onCreate function");
@@ -242,6 +240,7 @@ public class MainActivity extends AppCompatActivity
         return super.onCreateOptionsMenu(menu);
     }
     
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
@@ -296,24 +295,22 @@ public class MainActivity extends AppCompatActivity
         showVoiceInputDialog();
     }
     
-    @NonNull
-    private TextView.OnEditorActionListener getOnEditorActionListener()
+    
+    private boolean onEditorAction(TextView v, int actionId, KeyEvent event)
     {
-        return (v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE)
+        if (actionId == EditorInfo.IME_ACTION_DONE)
+        {
+            progBar.setVisibility(View.VISIBLE);    // подгон под тест 3
+            _cardList.clear();
+            cardsAdapter.notifyDataSetChanged();
+            String text = Objects.requireNonNull(txtQuery.getText()).toString().replace("null", "");
+            if (!text.isEmpty())
             {
-                progBar.setVisibility(View.VISIBLE);    // подгон под тест 3
-                _cardList.clear();
-                cardsAdapter.notifyDataSetChanged();
-                String text = Objects.requireNonNull(txtQuery.getText()).toString().replace("null", "");
-                if (!text.isEmpty())
-                {
-                    askWolframAsync(text);
-                }
-                return false;
+                askWolframAsync(text);
             }
-            return true;
-        };
+            return false;
+        }
+        return true;
     }
     
     /**
@@ -407,7 +404,7 @@ public class MainActivity extends AppCompatActivity
         this.setSupportActionBar(customToolBar);
         final ListView lvCards = findViewById(R.id.card_list);
         cardsAdapter = new SimpleAdapter(getApplicationContext(), _cardList, R.layout.list_item,
-            new String[] { ADAPTER_TITLE, ADAPTER_CONTENT }, new int[]{ R.id.card_title, R.id.card_content });
+            new String[] { ADAPTER_TITLE, ADAPTER_CONTENT }, new int[] { R.id.card_title, R.id.card_content });
         lvCards.setAdapter(cardsAdapter);
         if (!_cardList.isEmpty())
         {
@@ -415,34 +412,36 @@ public class MainActivity extends AppCompatActivity
         }
         final FloatingActionButton btVoiceInput = findViewById(R.id.voice_input_button);
         btVoiceInput.setOnClickListener(this::onVoiceButtonClick);
-        txtQuery.setOnEditorActionListener(getOnEditorActionListener());
+        txtQuery.setOnEditorActionListener(this::onEditorAction);
         lvCards.setOnItemClickListener(onListItemClicked_Handler);
     }
     
     /**
-     * Метод отображения всплывющей подсказки
+     * Метод отображения всплывающей подсказки
      */
     private void showSnackBar(String message)
     {
         Snackbar popup = Snackbar.make(this.androidContentView, message, Snackbar.LENGTH_INDEFINITE);
-        //txtQuery.setEnabled(false);
+        txtQuery.setEnabled(false);
         // вариант для автотеста
-        popup.setAction(android.R.string.ok, view -> {
-            popup.dismiss();
-            //txtQuery.setEnabled(true);
-        });
-//        popup.setAction(R.string.repeat_button_caption, view -> {
-//            String text  = Objects.requireNonNull(txtQuery.getText()).toString().replace("null", "");
-//            if (!text.isEmpty())
-//            {
-//                this.askWolframAsync(text);
-//            }
+//        popup.setAction(android.R.string.ok, view -> {
 //            popup.dismiss();
-//            txtQuery.setEnabled(true);
+//            //txtQuery.setEnabled(true);
 //        });
+        
+        popup.setAction(R.string.repeat_button_caption, view -> {
+            final String text  = Objects.toString(txtQuery.getText(), "");
+            if (!text.isEmpty())
+            {
+                this.askWolframAsync(text);
+            }
+            popup.dismiss();
+            txtQuery.setEnabled(true);
+        });
         popup.show();
     }
     
+    @SuppressWarnings("deprecation")
     private void askWolframAsync(String request)
     {
         if (request.isEmpty())
